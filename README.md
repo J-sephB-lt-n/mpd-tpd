@@ -2,6 +2,8 @@
 
 Python command-line tool for helping conceptualise how much money is left until payday
 
+[![Downloads](https://static.pepy.tech/badge/mpd-tpd)](https://pepy.tech/project/mpd-tpd)
+
 ```bash
 pip install mpd-tpd
 ```
