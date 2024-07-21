@@ -1,6 +1,10 @@
 # Money Per Day 'Til PayDay (mpd-tpd)
 
-Command-line tool for helping you make your money last until you get paid again
+Command-line tool for helping conceptualise how much money is left until payday
+
+```bash
+echo todo
+```
 
 ```bash
 $ mpd-tpd --help

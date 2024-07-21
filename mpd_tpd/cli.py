@@ -65,7 +65,7 @@ def commandline_mpd_tpd():
     +-------------------------------------+
     | Money Per Day 'Til PayDay (mpd-tpd) |
     +-------------------------------------+
-    Command-line tool for helping you make your money last until you get paid again
+    Command-line tool for helping conceptualise how much money is left until payday
 
     Examples:
         $ mpd-tpd --next_payday '2024-07-24' --money_remaining 100  
