@@ -15,4 +15,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-mpd-tpd = "mpd_tpd.cli:mpd_tpd"
+mpd-tpd = "mpd_tpd.cli:commandline_mpd_tpd"

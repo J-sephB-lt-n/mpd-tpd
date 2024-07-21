@@ -44,7 +44,8 @@ def mpd_tpd(
 
 
 def format_currency(num: Decimal, output_format: str) -> str:
-    """Formats the given decimal number according to the format supplied
+    """Formats the given decimal number according to the format supplied,
+    as well as rounding `num` to 2 decimal places and adding a ,000 separator
 
     Examples:
         >>> from decimal import Decimal
@@ -53,11 +54,35 @@ def format_currency(num: Decimal, output_format: str) -> str:
         >>> format_currency(Decimal("420.69"), output_format="x €")
         '420.69 €'
     """
-    return output_format.replace("x", str(num))
+    return output_format.replace("x", str(f"{num:,.2f}"))
 
 
-if __name__ == "__main__":
-    arg_parser = argparse.ArgumentParser(description="TODO")
+def commandline_mpd_tpd():
+    """Get user input from command line, pass it to mpd_tpd(), and print user-friendly output"""
+    arg_parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="""
+    +-------------------------------------+
+    | Money Per Day 'Til PayDay (mpd-tpd) |
+    +-------------------------------------+
+    Command-line tool for helping you make your money last until you get paid again
+
+    Examples:
+        $ mpd-tpd --next_payday '2024-07-24' --money_remaining 100  
+
+        # if you still intend to spend money today, then include flag '--include_today':
+        $ mpd-tpd --next_payday '2024-07-24' --money_remaining 99.99 --include_today
+
+        # if you have known bills which you want pre-removed before doing the calculation,
+        #   use parameter '--fixed_expenses': 
+        $ mpd-tpd --next_payday '2024-08-01' --money_remaining 80000 --fixed_expenses 25000 
+
+        # if you want the numbers formatted with a specific currency, specify the format 
+        #   using parameter '--currency_format'
+        $ mpd-tpd --next_payday '2024-07-24' --money_remaining 50 --currency_format '£x'
+        $ mpd-tpd --next_payday '2024-07-24' --money_remaining 99999 --currency_format 'x GBP'
+    """,
+    )
     arg_parser.add_argument(
         "-p",
         "--next_payday",
@@ -80,6 +105,13 @@ if __name__ == "__main__":
         type=Decimal,
     )
     arg_parser.add_argument(
+        "-c",
+        "--currency_format",
+        help="Show monetary amounts with a specific currency format. Examples: '$x', 'x €', 'xUSD'",
+        default="x",
+        type=str,
+    )
+    arg_parser.add_argument(
         "-t",
         "--include_today",
         help="I still want to spend money today (i.e. it is the beginning of the day)",
@@ -94,9 +126,13 @@ if __name__ == "__main__":
     )
     print(
         f"""
-You have {days_til_payday:,} days left until payday ({args.next_payday.strftime("%A")} {args.next_payday}) 
-You have {args.money_remaining:,.2f} left to spend and {args.fixed_expenses:,.2f} still to pay in fixed expenses before then.
-This means that you have {(args.money_remaining-args.fixed_expenses):,.2f} = ({args.money_remaining:,.2f} - {args.fixed_expenses:,.2f}) in total to spend until payday.
-i.e. you can spend {money_can_spend_per_day:,.2f} per day until you will be paid again.
+You have {days_til_payday:,} days left until payday ({args.next_payday.strftime("%A")} {args.next_payday}). 
+You have {format_currency(args.money_remaining, args.currency_format)} left to spend and {format_currency(args.fixed_expenses, args.currency_format)} still to pay in fixed expenses before then.
+This means that you have {format_currency(args.money_remaining-args.fixed_expenses, args.currency_format)} = ({format_currency(args.money_remaining, args.currency_format)} - {format_currency(args.fixed_expenses, args.currency_format)}) in total to spend until payday.
+i.e. you can spend {format_currency(money_can_spend_per_day, args.currency_format)} per day until you will be paid again.
         """
     )
+
+
+if __name__ == "__main__":
+    commandline_mpd_tpd()
