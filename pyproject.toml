@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mpd-tpd"
-version = "0.1.0"
+version = "0.1.1"
 description = "Python command-line tool for helping conceptualise how much money is left until payday"
 authors = ["J-sephB-lt-n <joseph.jazz.bolton@gmail.com>"]
 license = "GPL-3.0"
