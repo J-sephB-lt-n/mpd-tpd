@@ -1,9 +1,21 @@
 # Money Per Day 'Til PayDay (mpd-tpd)
 
-Command-line tool for helping conceptualise how much money is left until payday
+Python command-line tool for helping conceptualise how much money is left until payday
 
 ```bash
-echo todo
+pip install mpd-tpd
+```
+
+```bash
+mpd-tpd --next_payday '2024-07-31' \
+  --money_remaining '2806.45' \
+  --fixed_expenses '1269.00' \
+  --currency_format '£x'
+
+You have 9 days left (excluding today) until payday (Wednesday 2024-07-31).
+You have £2,806.45 left to spend and £1,269.00 still to pay in fixed expenses before then.
+This means that you have £1,537.45 = (£2,806.45 - £1,269.00) in total to spend until payday.
+i.e. you can spend £170.83 per day until you will be paid again.
 ```
 
 ```bash
@@ -14,7 +26,7 @@ usage: mpd-tpd [-h] -p NEXT_PAYDAY -m MONEY_REMAINING [-f FIXED_EXPENSES] [-c CU
     +-------------------------------------+
     | Money Per Day 'Til PayDay (mpd-tpd) |
     +-------------------------------------+
-    Command-line tool for helping you make your money last until you get paid again
+    Command-line tool for helping conceptualise how much money is left until payday
 
     Examples:
         $ mpd-tpd --next_payday '2024-07-24' --money_remaining 100
