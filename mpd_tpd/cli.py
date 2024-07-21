@@ -43,8 +43,21 @@ def mpd_tpd(
     return days_til_payday, money_can_spend_per_day
 
 
+def format_currency(num: Decimal, output_format: str) -> str:
+    """Formats the given decimal number according to the format supplied
+
+    Examples:
+        >>> from decimal import Decimal
+        >>> format_currency(Decimal("420.69"), output_format="£x")
+        '£420.69'
+        >>> format_currency(Decimal("420.69"), output_format="x €")
+        '420.69 €'
+    """
+    return output_format.replace("x", str(num))
+
+
 if __name__ == "__main__":
-    arg_parser = argparse.ArgumentParser()
+    arg_parser = argparse.ArgumentParser(description="TODO")
     arg_parser.add_argument(
         "-p",
         "--next_payday",
