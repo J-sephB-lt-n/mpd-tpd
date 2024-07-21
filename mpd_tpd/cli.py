@@ -124,9 +124,13 @@ def commandline_mpd_tpd():
         fixed_expenses=args.fixed_expenses,
         include_today=args.include_today,
     )
+    if args.include_today:
+        including_today_string = "(including today)"
+    else:
+        including_today_string = "(excluding today)"
     print(
         f"""
-You have {days_til_payday:,} days left until payday ({args.next_payday.strftime("%A")} {args.next_payday}). 
+You have {days_til_payday:,} days left {including_today_string} until payday ({args.next_payday.strftime("%A")} {args.next_payday}). 
 You have {format_currency(args.money_remaining, args.currency_format)} left to spend and {format_currency(args.fixed_expenses, args.currency_format)} still to pay in fixed expenses before then.
 This means that you have {format_currency(args.money_remaining-args.fixed_expenses, args.currency_format)} = ({format_currency(args.money_remaining, args.currency_format)} - {format_currency(args.fixed_expenses, args.currency_format)}) in total to spend until payday.
 i.e. you can spend {format_currency(money_can_spend_per_day, args.currency_format)} per day until you will be paid again.
