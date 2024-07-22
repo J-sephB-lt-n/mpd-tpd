@@ -77,6 +77,9 @@ def commandline_mpd_tpd():
         #   use parameter '--fixed_expenses': 
         $ mpd-tpd --next_payday '2024-08-01' --money_remaining 80000 --fixed_expenses 25000 
 
+        # you can explicitly name your fixed expenses if you want to #
+        $ mpt-tpd --next_payday '2024-08-01' --money_remaining 80000 --named_fixed_expenses 'home loan=19500.39,pay off credit card=351.16,netflix=5.41'
+
         # if you want the numbers formatted with a specific currency, specify the format 
         #   using parameter '--currency_format'
         $ mpd-tpd --next_payday '2024-07-24' --money_remaining 50 --currency_format '£x'
@@ -101,8 +104,13 @@ def commandline_mpd_tpd():
         "-f",
         "--fixed_expenses",
         help="Total pending payments (to be paid before your next payday) which are non-negotiable",
-        default=Decimal("0"),
         type=Decimal,
+    )
+    arg_parser.add_argument(
+        "-n",
+        "--named_fixed_expenses",
+        help="You can use this instead of --fixed_expenses if you want a verbose breakdown of your fixed expenses",
+        type=str,
     )
     arg_parser.add_argument(
         "-c",
@@ -118,6 +126,26 @@ def commandline_mpd_tpd():
         action="store_true",  # set to include_today=True if flag is present
     )
     args = arg_parser.parse_args()
+
+    if args.fixed_expenses and args.named_fixed_expenses:
+        raise ValueError(
+            "Please specify --fixed_expenses or --named_fixed_expenses, not both"
+        )
+
+    if args.named_fixed_expenses:
+        args.fixed_expenses = Decimal("0")
+        fixed_expenses_summary_string = "--Summary of Fixed Expenses--"
+        for expense in args.named_fixed_expenses.split(","):
+            # 'home loan=19500.39,pay off credit card=351.16,netflix=5.41'
+            name, amount = expense.split("=")
+            name = name.strip()
+            amount = Decimal(amount.strip())
+            fixed_expenses_summary_string += f'\n- "{name}" {amount:,.2f}'
+            args.fixed_expenses += amount
+        fixed_expenses_summary_string += f"\n- TOTAL: {args.fixed_expenses:,.2f}"
+    else:
+        fixed_expenses_summary_string = ""
+
     days_til_payday, money_can_spend_per_day = mpd_tpd(
         next_payday=args.next_payday,
         money_remaining=args.money_remaining,
@@ -134,6 +162,7 @@ You have {days_til_payday:,} days left {including_today_string} until payday ({a
 You have {format_currency(args.money_remaining, args.currency_format)} left to spend and {format_currency(args.fixed_expenses, args.currency_format)} still to pay in fixed expenses before then.
 This means that you have {format_currency(args.money_remaining-args.fixed_expenses, args.currency_format)} = ({format_currency(args.money_remaining, args.currency_format)} - {format_currency(args.fixed_expenses, args.currency_format)}) in total to spend until payday.
 i.e. you can spend {format_currency(money_can_spend_per_day, args.currency_format)} per day until you will be paid again.
+{fixed_expenses_summary_string}
         """
     )
 
