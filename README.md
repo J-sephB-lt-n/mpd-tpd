@@ -20,10 +20,12 @@ This means that you have £1,537.45 = (£2,806.45 - £1,269.00) in total to spen
 i.e. you can spend £170.83 per day until you will be paid again.
 ```
 
+Home Page: <https://github.com/J-sephB-lt-n/mpd-tpd>
+
 ```bash
 $ mpd-tpd --help
 
-usage: mpd-tpd [-h] -p NEXT_PAYDAY -m MONEY_REMAINING [-f FIXED_EXPENSES] [-n NAMED_FIXED_EXPENSES] [-c CURRENCY_FORMAT] [-t]
+usage: cli.py [-h] -p NEXT_PAYDAY -m MONEY_REMAINING [-f FIXED_EXPENSES] [-n NAMED_FIXED_EXPENSES] [-c CURRENCY_FORMAT] [-t]
 
     +-------------------------------------+
     | Money Per Day 'Til PayDay (mpd-tpd) |
@@ -40,12 +42,13 @@ usage: mpd-tpd [-h] -p NEXT_PAYDAY -m MONEY_REMAINING [-f FIXED_EXPENSES] [-n NA
         $ mpd-tpd --next_payday '2024-08-01' --money_remaining 80000 --fixed_expenses 25000
 
         # you can explicitly name your fixed expenses if you want to #
-        $ mpt-tpd --next_payday '2024-08-01' --money_remaining 80000 --named_fixed_expenses 'home loan=19500.39,pay off credit card=351.16,netflix=5.41'
+        $ mpd-tpd --next_payday '2024-08-01' --money_remaining 80000 --named_fixed_expenses 'home loan=19500.39,pay off credit card=351.16,netflix=5.41'
 
         # if you want the numbers formatted with a specific currency, specify the format
         #   using parameter '--currency_format'
         $ mpd-tpd --next_payday '2024-07-24' --money_remaining 50 --currency_format '£x'
         $ mpd-tpd --next_payday '2024-07-24' --money_remaining 99999 --currency_format 'x GBP'
+
 
 options:
   -h, --help            show this help message and exit
