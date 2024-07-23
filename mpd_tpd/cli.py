@@ -73,12 +73,11 @@ def commandline_mpd_tpd():
         # if you still intend to spend money today, then include flag '--include_today':
         $ mpd-tpd --next_payday '2024-07-24' --money_remaining 99.99 --include_today
 
-        # if you have known bills which you want pre-removed before doing the calculation,
-        #   use parameter '--fixed_expenses': 
+        # if you have known compulsory bills which you want pre-removed before doing the calculation, use parameter '--fixed_expenses': 
         $ mpd-tpd --next_payday '2024-08-01' --money_remaining 80000 --fixed_expenses 25000 
 
         # you can explicitly name your fixed expenses if you want to #
-        $ mpt-tpd --next_payday '2024-08-01' --money_remaining 80000 --named_fixed_expenses 'home loan=19500.39,pay off credit card=351.16,netflix=5.41'
+        $ mpd-tpd --next_payday '2024-08-01' --money_remaining 80000 --named_fixed_expenses 'home loan=19500.39,pay off credit card=351.16,netflix=5.41'
 
         # if you want the numbers formatted with a specific currency, specify the format 
         #   using parameter '--currency_format'
@@ -134,17 +133,20 @@ def commandline_mpd_tpd():
 
     if args.named_fixed_expenses:
         args.fixed_expenses = Decimal("0")
-        fixed_expenses_summary_string = "--Summary of Fixed Expenses--"
+        fixed_expenses_summary_string = "-- Summary of Fixed Expenses --"
         for expense in args.named_fixed_expenses.split(","):
             # 'home loan=19500.39,pay off credit card=351.16,netflix=5.41'
             name, amount = expense.split("=")
             name = name.strip()
             amount = Decimal(amount.strip())
-            fixed_expenses_summary_string += f'\n- "{name}" {amount:,.2f}'
+            fixed_expenses_summary_string += f'\n * "{name}" {amount:,.2f}'
             args.fixed_expenses += amount
-        fixed_expenses_summary_string += f"\n- TOTAL: {args.fixed_expenses:,.2f}"
+        fixed_expenses_summary_string += f"\n * TOTAL: {args.fixed_expenses:,.2f}"
     else:
         fixed_expenses_summary_string = ""
+
+    if args.fixed_expenses is None:
+        args.fixed_expenses = Decimal("0")
 
     days_til_payday, money_can_spend_per_day = mpd_tpd(
         next_payday=args.next_payday,
